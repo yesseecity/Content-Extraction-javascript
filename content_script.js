@@ -1,5 +1,17 @@
 function removeIframe(){
-    document.getElementsByTagName('iframe');
+    var iframTags = document.getElementsByTagName('iframe');
+    for(ifram of iframTags) {
+        let inPreserveList = false;
+        preserveList.iframe.forEach((preserve)=>{
+            let re = new RegExp(preserve , 'i')
+            if(re.test(ifram.src)){
+                inPreserveList = true
+            }
+        });
+        if (!inPreserveList) {
+            ifram.remove()
+        }
+    }
 }
 function removeByClassName(className){
     while ( document.getElementsByClassName(className).length > 0) {
@@ -72,18 +84,20 @@ removeList = {
     id:['links', 'header', 'footer', 'banner', 'leaderboard', 'related'],
     tag:['script', 'iframe', 'header', 'footer', 'style', 'a'],
     other:['sidebar', 'list', 'link', 'ad', 'banner', 'related', 'lightbox', 'header', 'footer', 'social', 'fb', 'comment', 'copyright', 'pop', 'dialog']
-    // other:['ad']
+}
+preserveList = {
+    iframe: ['youtube', 'vimeo', 'facebook']
 }
 
 for (v of removeList.class) {
     removeByClassName(v);
 }
 for (v of removeList.tag) {
-    // if(v == 'iframe') {
-    //     removeIframe();
-    // } else {
-    // }
-    removeByTagName(v);
+    if(v == 'iframe') {
+        removeIframe();
+    } else {
+        removeByTagName(v);
+    }
 }
 for (v of removeList.id) {
     removeById(v);
