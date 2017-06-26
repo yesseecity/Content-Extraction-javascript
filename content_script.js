@@ -13,16 +13,29 @@ function removeIframe(){
         }
     }
 }
+function removeHyperlink(){
+    function process(hyperLink){
+        for (childrenNode of hyperLink.children){
+            if(childrenNode.tagName != 'IMG') {
+                childrenNode.remove();
+            }
+        }
+    }
+
+    for(hyperLink of document.getElementsByTagName('a')) {
+        process(hyperLink)
+    }
+}
 function removeByClassName(className){
     while ( document.getElementsByClassName(className).length > 0) {
         document.getElementsByClassName(className)[0].remove();
-        console.log(className+'.length: ',document.getElementsByClassName(className).length)
+        // console.log(className+'.length: ',document.getElementsByClassName(className).length)
     }
 }
 function removeByTagName(tagName){
     while ( document.getElementsByTagName(tagName).length > 0) {
         document.getElementsByTagName(tagName)[0].remove();
-        console.log(tagName+'.length: ',document.getElementsByTagName(tagName).length)
+        // console.log(tagName+'.length: ',document.getElementsByTagName(tagName).length)
     }
 }
 function removeById(id){
@@ -67,8 +80,22 @@ function searchInAttr(keyword) {
             return re3.test(htmlClass)
         })
 
-        // console.log(idList)
-        // console.log(classList)
+        let inPreserveList = false;
+        classList.forEach((className, index)=>{
+            // console.log(index, className)
+            preserveList.class.forEach((pClassName)=>{
+                let allMatch = pClassName.split(',').every((element, index, array)=>{
+                    let re = new RegExp(element)
+                    return re.test(className)
+                })
+                if(allMatch) {
+                    delete classList[index]
+                }
+            })
+        })
+
+        // console.log('idList: ', idList)
+        // console.log('classList: ', classList)
         return {
             'id': idList,
             'class': classList
@@ -79,14 +106,18 @@ function searchInAttr(keyword) {
 }
 
 
-removeList = {
-    class:['Header', 'Footer', 'header', 'footer', 'topbar', 'ArticleList', 'links', 'banner', 'leaderboard', 'related', 'avatar'],
+var removeList = {
+    class:['Header', 'Footer', 'header', 'footer', 'topbar', 'ArticleList', 'LinkList', 'links', 'banner', 'leaderboard', 'related', 'avatar', 'previous', 'next', 'feed', 'navbar', 'menu'],
     id:['links', 'header', 'footer', 'banner', 'leaderboard', 'related'],
-    tag:['script', 'iframe', 'header', 'footer', 'style', 'a'],
-    other:['sidebar', 'list', 'link', 'ad', 'banner', 'related', 'lightbox', 'header', 'footer', 'social', 'fb', 'comment', 'copyright', 'pop', 'dialog']
+    tag:['script', 'noscript', 'iframe', 'header', 'footer', 'style', 'a'],
+    other:['list', 'link', 'sidebar', 'ad', 'banner', 'related', 'lightbox', 'header', 'footer', 'social', 'comment', 'copyright', 'pop', 'dialog', 'subscription', 'billboard', 'a2a' ,'author', 'navi']
 }
-preserveList = {
-    iframe: ['youtube', 'vimeo', 'facebook']
+
+// removeList.other = ['widget']
+// class: linkwithin
+var preserveList = {
+    class:['mark-links', 'post_list', 'with,sidebar','-,sidebar', 'lazyloaded', 'load', 'loaded', 'pad', 'category,banner'],
+    iframe: ['youtube', 'vimeo', 'facebook', 'line']
 }
 
 for (v of removeList.class) {
@@ -95,6 +126,8 @@ for (v of removeList.class) {
 for (v of removeList.tag) {
     if(v == 'iframe') {
         removeIframe();
+    } else if (v == 'a') {
+        removeHyperlink();
     } else {
         removeByTagName(v);
     }
@@ -114,6 +147,7 @@ for (v of removeList.other) {
 
     if(attr && attr.class.length>0) {
         attr.class.forEach((className)=>{
+
             removeByClassName(className);
         })
     }
