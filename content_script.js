@@ -1,22 +1,25 @@
 function removeIframe(){
-    var iframTags = document.getElementsByTagName('iframe');
-    for(ifram of iframTags) {
+    var iframeTags = document.getElementsByTagName('iframe');
+    for(iframe of iframeTags) {
         let inPreserveList = false;
         preserveList.iframe.forEach((preserve)=>{
             let re = new RegExp(preserve , 'i')
-            if(re.test(ifram.src)){
+            if(re.test(iframe.src)){
                 inPreserveList = true
             }
         });
         if (!inPreserveList) {
-            ifram.remove()
+            iframe.remove()
         }
     }
 }
 function removeHyperlink(){
     function process(hyperLink){
         for (childrenNode of hyperLink.children){
+            console.log('tagName: ', childrenNode.tagName)
+            console.log('className: ', childrenNode.className)
             if(childrenNode.tagName != 'IMG') {
+                console.log('\t\tremove()')
                 childrenNode.remove();
             }
         }
@@ -110,13 +113,13 @@ var removeList = {
     class:['Header', 'Footer', 'header', 'footer', 'topbar', 'ArticleList', 'LinkList', 'links', 'banner', 'leaderboard', 'related', 'avatar', 'previous', 'next', 'feed', 'navbar', 'menu'],
     id:['links', 'header', 'footer', 'banner', 'leaderboard', 'related'],
     tag:['script', 'noscript', 'iframe', 'header', 'footer', 'style', 'a'],
-    other:['list', 'link', 'sidebar', 'ad', 'banner', 'related', 'lightbox', 'header', 'footer', 'social', 'comment', 'copyright', 'pop', 'dialog', 'subscription', 'billboard', 'a2a' ,'author', 'navi']
+    other:['list', 'link', 'sidebar', 'ad', 'banner', 'related', 'lightbox', 'header', 'footer', 'social', 'comment', 'copyright', 'pop', 'dialog', 'subscription', 'billboard', 'a2a' ,'author', 'navi', 'secondary']
 }
 
-// removeList.other = ['widget']
+// removeList.other = ['widget',  'ad', 'banner', 'related', 'lightbox', 'header', 'footer', 'social', 'comment', 'copyright', 'pop',  ]
 // class: linkwithin
 var preserveList = {
-    class:['mark-links', 'post_list', 'with,sidebar','-,sidebar', 'lazyloaded', 'load', 'loaded', 'pad', 'category,banner'],
+    class:['mark-links', 'post_list', 'with,sidebar','-,sidebar', 'image,popup', 'primary,secondary', 'lazyloaded', 'load', 'loaded', 'pad', 'category,banner'],
     iframe: ['youtube', 'vimeo', 'facebook', 'line']
 }
 
